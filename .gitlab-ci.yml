@@ -1,0 +1,22 @@
+image: docker:git
+
+stages:
+- build
+
+variables:
+  IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  DOCKER_DRIVER: overlay
+
+Build Image:
+  stage: build
+  services:
+  - docker:dind
+  before_script:
+    - docker info
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build  --build-arg DEBUG=false -t $IMAGE_NAME .
+    - docker push $IMAGE_NAME
+  only:
+    - master
+    - tags
