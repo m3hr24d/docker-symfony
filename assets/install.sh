@@ -13,8 +13,19 @@ PROJECT_DIR=${PROJECT_DIR}
 ##########################
 # config apt source list #
 ###################################################################################
-echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-	&& wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc && apt-key add ACCC4CF8.asc
+echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc && apt-key add ACCC4CF8.asc
+
+echo "deb https://packages.sury.org/php/ stretch main" | tee /etc/apt/sources.list.d/php.list
+wget -q https://packages.sury.org/php/apt.gpg -O- | apt-key add -
+
+apt-get update
+
+#####################
+#  install php 7.1  #
+###################################################################################
+DEBCONF_FRONTEND=noninteractive apt-get install -y php7.1 php7.1-common php7.1-fpm php7.1-xml\
+	php7.1-pgsql php7.1-gd php7.1-intl php7.1-phpdbg php7.1-tidy php-xdebug php7.1-mbstring php7.1-mcrypt php7.1-zip \
 
 #####################
 # config apt cacher #
@@ -27,9 +38,8 @@ fi
 ####################
 # install packages #
 ###################################################################################
-DEBCONF_FRONTEND=noninteractive apt-get install -y htop nano zsh zip unzip php7.0 php7.0-common php7.0-fpm php7.0-xml\
-	php7.0-pgsql php7.0-gd php7.0-intl php7.0-phpdbg php7.0-tidy php-xdebug php7.0-mbstring php7.0-mcrypt php7.0-zip \
-	nginx net-tools iputils-ping supervisor postgresql-client-9.6 software-properties-common python3-software-properties
+DEBCONF_FRONTEND=noninteractive apt-get install -y htop nano zsh zip unzip nginx net-tools iputils-ping supervisor \
+	postgresql-client-9.6 software-properties-common python3-software-properties
 
 ###############################
 # Add and config project user #
@@ -62,24 +72,29 @@ echo "composer setup completed with exit code $RESULT"
 # Config nginx #
 ###################################################################################
 rm -f /etc/nginx/sites-enabled/default \
-	&& mv ${CONFIGS_PATH}/nginx/default /etc/nginx/sites-enabled/${PROJECT_NAME} \
-	&& sed -i "s/user www-data;/user $PROJECT_USER;/" /etc/nginx/nginx.conf
+	&& mv ${CONFIGS_PATH}/nginx/default /etc/nginx/sites-enabled/${PROJECT_NAME}
+	sed -i "s/user www-data;/user $PROJECT_USER;/" /etc/nginx/nginx.conf
+	sed -i "s/access.log;/${PROJECT_NAME}_access.log;/" /etc/nginx/sites-enabled/${PROJECT_NAME}
+	sed -i "s/error.log;/${PROJECT_NAME}_error.log;/" /etc/nginx/sites-enabled/${PROJECT_NAME}
+	sed -i "s#/srv/www;#/srv/$PROJECT_NAME/public;#" /etc/nginx/sites-enabled/${PROJECT_NAME}
 
 ##################
 # Config php-fpm #
 ###################################################################################
-sed -i "s/user = www-data/user = $PROJECT_USER/g" /etc/php/7.0/fpm/pool.d/www.conf \
-	 && sed -i "s/group = www-data/group = $PROJECT_GROUP/g" /etc/php/7.0/fpm/pool.d/www.conf \
-	 && sed -i "s/listen.owner = www-data/listen.owner = $PROJECT_USER/g" /etc/php/7.0/fpm/pool.d/www.conf \
-	 && sed -i "s/listen.group = www-data/listen.group = $PROJECT_GROUP/g" /etc/php/7.0/fpm/pool.d/www.conf \
-	 && sed -i "s/;extension=php_curl.dll/extension=php_curl.dll/g" /etc/php/7.0/fpm/php.ini \
-	 && sed -i "s/;extension=php_fileinfo.dll/extension=php_fileinfo.dll/g" /etc/php/7.0/fpm/php.ini \
-	 && sed -i "s/;extension=php_gd2.dll/extension=php_gd2.dll/g" /etc/php/7.0/fpm/php.ini \
-	 && sed -i "s/;extension=php_ctype.dll/extension=php_ctype.dll/g" /etc/php/7.0/fpm/php.ini \
-	 && sed -i "s/;extension=php_iconv.dll/extension=php_iconv.dll/g" /etc/php/7.0/fpm/php.ini \
-	 && sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" /etc/php/7.0/fpm/php.ini \
-	 && sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" /etc/php/7.0/fpm/php.ini \
-	 && cp -v ${CONFIGS_PATH}/php-fpm/php-ini-overrides.ini /etc/php/7.0/fpm/conf.d/99-overrides.ini
+sed -i "s/user = www-data/user = $PROJECT_USER/g" /etc/php/7.1/fpm/pool.d/www.conf \
+	 && sed -i "s/group = www-data/group = $PROJECT_GROUP/g" /etc/php/7.1/fpm/pool.d/www.conf \
+	 && sed -i "s/listen.owner = www-data/listen.owner = $PROJECT_USER/g" /etc/php/7.1/fpm/pool.d/www.conf \
+	 && sed -i "s/listen.group = www-data/listen.group = $PROJECT_GROUP/g" /etc/php/7.1/fpm/pool.d/www.conf \
+	 && sed -i "s/;extension=php_curl.dll/extension=php_curl.dll/g" /etc/php/7.1/fpm/php.ini \
+	 && sed -i "s/;extension=php_fileinfo.dll/extension=php_fileinfo.dll/g" /etc/php/7.1/fpm/php.ini \
+	 && sed -i "s/;extension=php_gd2.dll/extension=php_gd2.dll/g" /etc/php/7.1/fpm/php.ini \
+	 && sed -i "s/;extension=php_ctype.dll/extension=php_ctype.dll/g" /etc/php/7.1/fpm/php.ini \
+	 && sed -i "s/;extension=php_iconv.dll/extension=php_iconv.dll/g" /etc/php/7.1/fpm/php.ini \
+	 && sed -i "s/;extension=php_pdo_pgsql.dll/extension=php_pdo_pgsql.dll/g" /etc/php/7.1/fpm/php.ini \
+	 && sed -i "s/;extension=php_pgsql.dll/extension=php_pgsql.dll/g" /etc/php/7.1/fpm/php.ini \
+	 && sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" /etc/php/7.1/fpm/php.ini \
+	 && sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" /etc/php/7.1/fpm/php.ini \
+	 && cp -v ${CONFIGS_PATH}/php-fpm/php-ini-overrides.ini /etc/php/7.1/fpm/conf.d/99-overrides.ini
 
 #####################
 # Config supervisor #
