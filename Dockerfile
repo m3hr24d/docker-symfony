@@ -1,6 +1,6 @@
 FROM debian:stretch-slim
 
-ARG PROJECT_NAME
+ARG PROJECT_NAME="app"
 ARG DEBUG=false
 ARG APT_CACHER_SERVER
 
