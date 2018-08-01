@@ -10,7 +10,7 @@ guard-%:
 		exit 1; \
 	fi
 
-build: guard-NAME guard-VERSION
+build: guard-REGISTRY_NAME guard-VERSION
 
 	docker build --force-rm \
 		-t $(REGISTRY_NAME):$(VERSION) \
@@ -19,5 +19,5 @@ build: guard-NAME guard-VERSION
 		--build-arg=PROJECT_NAME=$(PROJECT_NAME) \
 		.
 
-release: guard-NAME guard-VERSION
+release: guard-REGISTRY_NAME guard-VERSION
 	docker push $(REGISTRY_NAME):$(VERSION)
