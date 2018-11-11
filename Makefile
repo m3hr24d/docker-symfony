@@ -23,7 +23,6 @@ define check_distro_existence
 	fi
 
 	$(eval DISTRO:=$(shell cat "./dists/$(DISTRO)/$(BASE_IMAGE_FILE)"))
-	@echo $(DISTRO)
 endef
 
 help:
@@ -32,7 +31,7 @@ help:
 	@echo '     / __  / __ \/ ___/ //_/ _ \/ ___/  / ___/ / / / __ `__ \/ /_/ __ \/ __ \/ / / /	  '
 	@echo '    / /_/ / /_/ / /__/ ,< /  __/ /     (__  ) /_/ / / / / / / __/ /_/ / / / / /_/ / 	  '
 	@echo '    \__,_/\____/\___/_/|_|\___/_/     /____/\__, /_/ /_/ /_/_/  \____/_/ /_/\__, /  	  '
-	@echo '                                           /____/                          /____/   	v1'
+	@echo '                                           /____/                          /____/   	v1.2'
 	@echo ''
 	@echo "build REGISTRY_NAME= DISTRO="
 	@echo "  Create docker image from specific distro."
