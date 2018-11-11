@@ -1,22 +1,20 @@
-image: docker:git
-
 stages:
-- build
+- deploy
 
-variables:
-  IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
-  DOCKER_DRIVER: overlay
-
-Build Image:
-  stage: build
+deploy-dists:
+  stage: deploy
+  image: docker:git
   services:
   - docker:dind
   before_script:
-    - docker info
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  - docker info
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  - apk add make
+  - chmod +x ./ci/*
   script:
-    - docker build  --build-arg DEBUG=false -t $IMAGE_NAME .
-    - docker push $IMAGE_NAME
+  - ./ci/build.sh
+  after_script:
+  - ./ci/test.sh
+  - ./ci/deploy.sh
   only:
-    - master
-    - tags
+  - /^v[0-9]+[\.0-9]*[\.0-9]*$/
