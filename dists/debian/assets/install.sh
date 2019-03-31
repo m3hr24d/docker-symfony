@@ -102,7 +102,7 @@ echo "composer setup completed with exit code $RESULT"
 ###################################################################################
 rm -f /etc/nginx/conf.d/default.conf \
 	&& mv ${CONFIGS_PATH}/nginx/default /etc/nginx/conf.d/${PROJECT_NAME}.conf
-	sed -i "s/user[\s]+nginx;/user $PROJECT_USER;/" /etc/nginx/nginx.conf
+	sed -i "s/user\s\{1,\}nginx;/user $PROJECT_USER;/" /etc/nginx/nginx.conf
 	sed -i "s/access.log;/${PROJECT_NAME}_access.log;/" /etc/nginx/conf.d/${PROJECT_NAME}.conf
 	sed -i "s/error.log;/${PROJECT_NAME}_error.log;/" /etc/nginx/conf.d/${PROJECT_NAME}.conf
 	sed -i "s#/srv/www;#$PROJECT_DIR/public;#" /etc/nginx/conf.d/${PROJECT_NAME}.conf
