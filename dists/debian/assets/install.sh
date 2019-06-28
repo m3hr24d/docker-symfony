@@ -37,6 +37,12 @@ wget -q https://nginx.org/keys/nginx_signing.key -O- | apt-key add -
 echo "deb https://nginx.org/packages/debian/ stretch nginx" >> /etc/apt/sources.list.d/nginx.list
 echo "deb-src https://nginx.org/packages/debian/ stretch nginx" >> /etc/apt/sources.list.d/nginx.list
 
+wget --quiet -O - https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+NODEJS_VERSION=node_12.x
+DISTRO="$(lsb_release -s -c)"
+echo "deb https://deb.nodesource.com/$NODEJS_VERSION $DISTRO main" | tee /etc/apt/sources.list.d/nodesource.list
+echo "deb-src https://deb.nodesource.com/$NODEJS_VERSION $DISTRO main" | tee -a /etc/apt/sources.list.d/nodesource.list
+
 apt-get update
 
 #####################
@@ -62,13 +68,21 @@ DEBCONF_FRONTEND=noninteractive apt-get install -y \
 	php7.2-fpm \
 	php7.2-xml \
 	php7.2-pgsql \
+	php7.2-mysql \
 	php7.2-gd \
 	php7.2-intl \
 	php7.2-phpdbg \
 	php7.2-tidy \
 	php-xdebug \
 	php7.2-mbstring \
-	php7.2-zip
+	php7.2-zip \
+	php7.2-soap \
+	php7.2-sqlite3 \
+	php7.2-sybase \
+	php7.2-xsl \
+	php7.2-curl \
+	mysql-client \
+	nodejs
 
 ###############################
 # Add and config project user #
