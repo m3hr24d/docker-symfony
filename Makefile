@@ -18,12 +18,12 @@ help:
 	@echo '     / __  / __ \/ ___/ //_/ _ \/ ___/  / ___/ / / / __ `__ \/ /_/ __ \/ __ \/ / / /	  '
 	@echo '    / /_/ / /_/ / /__/ ,< /  __/ /     (__  ) /_/ / / / / / / __/ /_/ / / / / /_/ / 	  '
 	@echo '    \__,_/\____/\___/_/|_|\___/_/     /____/\__, /_/ /_/ /_/_/  \____/_/ /_/\__, /  	  '
-	@echo '                                           /____/                          /____/   	v1.3'
+	@echo '                                           /____/                          /____/   	v1.4'
 	@echo ''
 	@echo "build REGISTRY_NAME= DISTRO="
 	@echo "  Create docker image from specific distro."
 	@echo ""
-	@echo "release"
+	@echo "release REGISTRY_NAME= VERSION="
 	@echo "  push your image to your registry's project."
 	@echo ""
 
