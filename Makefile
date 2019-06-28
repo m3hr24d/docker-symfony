@@ -5,25 +5,12 @@ PROJECT_NAME?=app
 DISTRO=
 EXPOSED_PORTS=
 APT_CACHER_SERVER=
-BASE_IMAGE_FILE=base_image
 
 guard-%:
 	@ if [ "${${*}}" = "" ]; then \
 		echo "Environment variable $* not set"; \
 		exit 1; \
 	fi
-
-define check_distro_existence
-	@ if [ ! -d "./dists/$(DISTRO)" ]; then \
-		echo "\"$(DISTRO)\" distribution not exist in this \"dists\" directory!"; \
-		exit 2; \
-	elif [ ! -f "./dists/$(DISTRO)/$(BASE_IMAGE_FILE)" ]; then \
-		echo "\"$(BASE_IMAGE_FILE)\" file not exist in \"$(DISTRO)\" distribution!"; \
-		exit 3; \
-	fi
-
-	$(eval DISTRO:=$(shell cat "./dists/$(DISTRO)/$(BASE_IMAGE_FILE)"))
-endef
 
 help:
 	@echo '           __           __                                     ____                 	  '
@@ -40,9 +27,7 @@ help:
 	@echo "  push your image to your registry's project."
 	@echo ""
 
-build: guard-REGISTRY_NAME guard-VERSION guard-DISTRO
-	$(call check_distro_existence)
-	@docker tag $(shell cat "./dists/$(DISTRO)/$(BASE_IMAGE_FILE)") base-image
+build: guard-REGISTRY_NAME guard-DISTRO
 	@docker build --force-rm \
 		-t $(REGISTRY_NAME):$(VERSION) \
 		--build-arg=DEBUG=$(DEBUG) \
@@ -50,7 +35,7 @@ build: guard-REGISTRY_NAME guard-VERSION guard-DISTRO
 		--build-arg=PROJECT_NAME=$(PROJECT_NAME) \
 		--build-arg=DISTRO=$(DISTRO) \
 		--build-arg=EXPOSED_PORTS=$(EXPOSED_PORTS) \
-		.
+		./dists/$(DISTRO)
 
 release: guard-REGISTRY_NAME guard-VERSION
 	docker push $(REGISTRY_NAME):$(VERSION)

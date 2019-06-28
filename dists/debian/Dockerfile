@@ -1,8 +1,8 @@
-FROM base-image
+FROM debian:stretch-slim
 
 ARG PROJECT_NAME="app"
 ARG DEBUG=false
-ARG DISTRO
+ARG DISTRO="debian"
 ARG APT_CACHER_SERVER
 ARG EXPOSED_PORTS
 
@@ -16,8 +16,8 @@ ENV PROJECT_USER=$PROJECT_NAME \
 
 RUN mkdir -p $PROJECT_DIR
 
-ADD ./dists/$DISTRO/assets /tmp/$PROJECT_NAME/
-RUN chmod 755 /tmp/$PROJECT_NAME/install.sh && /tmp/$PROJECT_NAME/install.sh
+ADD ./assets /tmp/$PROJECT_NAME/
+RUN chmod 777 /tmp/$PROJECT_NAME/install.sh && /tmp/$PROJECT_NAME/install.sh
 
 WORKDIR $PROJECT_DIR
 
