@@ -9,7 +9,9 @@ you can build your own symfony images
 or
 
 	$ git clone git@github.com:m3hr24d/docker-symfony.git
-you can pull default images 
+you'll be able to pull default images
+
+	$ docker pull registry.gitlab.com/m3hr24d/docker-symfony:v[VERSION]-[DISTRO]
 	
 ***You can use these dists:***
 ============================
