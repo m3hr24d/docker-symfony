@@ -9,7 +9,7 @@ for DIST in ./dists/*; do
 	IMAGE_NAME=${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}-${DIST}
 	IMAGE_ID=`docker images -q ${IMAGE_NAME}`
 	if [[ ! -z ${IMAGE_ID} ]]; then
-		echo "[OK]: The image (${IMAGE_NAME}) was found successfully."
+		echo "[OK]: The image (${IMAGE_NAME}) found successfully."
 	    docker images
 	    docker run -d --name ${DIST} ${IMAGE_NAME}
 	    IMAGE_STATUS=`docker ps -aq -f status=exited -f name=${DIST}`
