@@ -25,7 +25,8 @@ DEBCONF_FRONTEND=noninteractive apt-get update \
 	ca-certificates \
 	gnupg2 \
 	apt-transport-https \
-	wget
+	wget \
+	lsb-release
 
 ##########################
 # config apt source list #
@@ -36,6 +37,9 @@ echo "deb https://packages.sury.org/php/ stretch main" | tee /etc/apt/sources.li
 wget -q https://nginx.org/keys/nginx_signing.key -O- | apt-key add -
 echo "deb https://nginx.org/packages/debian/ stretch nginx" >> /etc/apt/sources.list.d/nginx.list
 echo "deb-src https://nginx.org/packages/debian/ stretch nginx" >> /etc/apt/sources.list.d/nginx.list
+
+echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' >  /etc/apt/sources.list.d/pgdg.list
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 
 wget --quiet -O - https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
 NODEJS_VERSION=node_12.x
@@ -82,6 +86,7 @@ DEBCONF_FRONTEND=noninteractive apt-get install -y \
 	php7.2-xsl \
 	php7.2-curl \
 	mysql-client \
+	postgresql-client-10 \
 	nodejs
 
 ###############################
