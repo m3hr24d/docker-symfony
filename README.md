@@ -5,8 +5,11 @@ you can build your own symfony images
 
 ***Installation:***
 ===================
+	$ git clone git@gitlab.com:m3hr24d/docker-symfony.git
+or
 
-	> git clone git@gitlab.com:m3hr24d/docker-symfony.git
+	$ git clone git@github.com:m3hr24d/docker-symfony.git
+you can pull default images 
 	
 ***You can use these dists:***
 ============================
